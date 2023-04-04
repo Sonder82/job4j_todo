@@ -1,0 +1,17 @@
+package ru.job4j.todo.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+@Controller
+public class IndexController {
+    /**
+     * Метод используется для отображения начальной страницы
+     *
+     * @return возвращает начальную страницу
+     */
+    @GetMapping({"/", "/index"})
+    public String getIndex() {
+        return "index";
+    }
+}
