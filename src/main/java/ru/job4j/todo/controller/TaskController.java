@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
@@ -30,13 +29,8 @@ public class TaskController {
 
     @PostMapping("/create")
     public String create(@ModelAttribute Task task, Model model) {
-        try {
             taskService.add(task);
             return "redirect:/tasks";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
-            return "errors/404";
-        }
     }
 
     @GetMapping("/{id}")
@@ -73,30 +67,22 @@ public class TaskController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute Task task, Model model) {
-        try {
             boolean isUpdated = taskService.update(task);
             if (!isUpdated) {
                 model.addAttribute("message", "Задача с указанным идентификатором не найдена");
                 return "errors/404";
             }
             return "redirect:/tasks";
-        } catch (Exception exception) {
-            model.addAttribute("message", exception.getMessage());
-            return "errors/404";
-        }
     }
 
 
     @GetMapping("/perform/{id}")
     public String perform(Model model, @PathVariable int id) {
-        var taskOptional = taskService.findById(id);
-        if (taskOptional.isEmpty()) {
+        var updateField = taskService.updateFieldDone(id);
+        if (!updateField) {
             model.addAttribute("message", "Задача с указанным идентификатором не найдена");
             return "errors/404";
         }
-        var task = taskOptional.get();
-        task.setDone(true);
-        taskService.update(task);
         return "redirect:/tasks";
     }
 

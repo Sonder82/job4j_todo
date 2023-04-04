@@ -25,6 +25,11 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
+    public boolean updateFieldDone(Integer id) {
+        return taskRepository.updateFieldDone(id);
+    }
+
+    @Override
     public boolean deleteById(Integer id) {
         return taskRepository.deleteById(id);
     }

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
@@ -26,7 +27,7 @@ public class Task {
 
     @Getter
     @Setter
-    private Timestamp created = new Timestamp(System.currentTimeMillis());
+    private LocalDateTime created = LocalDateTime.now();
 
     @Getter
     @Setter

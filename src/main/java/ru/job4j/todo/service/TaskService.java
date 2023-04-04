@@ -18,4 +18,6 @@ public interface TaskService {
     Collection<Task> findByDone(boolean key);
 
     Optional<Task> findById(Integer id);
+
+    boolean updateFieldDone(Integer id);
 }

@@ -4,15 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ui.ConcurrentModel;
-import ru.job4j.todo.controller.TaskController;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
-import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.LocalDateTime.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -31,10 +30,8 @@ public class TaskControllerTest {
 
     @Test
     void whenRequestTaskListPageThenGetPageWithTasks() {
-        var task1 = new Task(1, "test1", Timestamp.valueOf(String.format("%04d-%02d-%02d 01:00:00",
-                2023, 4, 02)), false);
-        var task2 = new Task(2, "test2", Timestamp.valueOf(String.format("%04d-%02d-%02d 02:00:00",
-                2023, 4, 02)), false);
+        var task1 = new Task(1, "test1", now(), false);
+        var task2 = new Task(2, "test2", now(), false);
         List<Task> expectedTasks = List.of(task1, task2);
         when(taskService.findAll()).thenReturn(expectedTasks);
 
@@ -49,8 +46,7 @@ public class TaskControllerTest {
     @Test
     public void whenRequestIdThenGetPageWithTasks() {
         int searchId = 1;
-        var task1 = new Task(1, "test1", Timestamp.valueOf(String.format("%04d-%02d-%02d 01:00:00",
-                2023, 4, 02)), false);
+        var task1 = new Task(1, "test1", now(), false);
         when(taskService.findById(searchId)).thenReturn(Optional.of(task1));
 
         var model = new ConcurrentModel();
@@ -77,8 +73,7 @@ public class TaskControllerTest {
 
     @Test
     public void whenPostTaskThenUpdateAndRedirectToTaskPage() throws Exception {
-        var taskUpdate = new Task(1, "test1", Timestamp.valueOf(String.format("%04d-%02d-%02d 01:00:00",
-                2023, 4, 02)), false);
+        var taskUpdate = new Task(1, "test1", now(), false);
 
         ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
         when(taskService.update(taskArgumentCaptor.capture())).thenReturn(true);
@@ -94,8 +89,7 @@ public class TaskControllerTest {
     @Test
     public void whenPostTaskThenTryUpdateAndRedirectToErrorPage() {
         var expectedMessage = "Задача с указанным идентификатором не найдена";
-        var taskUpdate = new Task(1, "test1", Timestamp.valueOf(String.format("%04d-%02d-%02d 01:00:00",
-                2023, 4, 02)), false);
+        var taskUpdate = new Task(1, "test1", now(), false);
         when(taskService.update(any(Task.class))).thenReturn(false);
 
         var model = new ConcurrentModel();
@@ -131,10 +125,8 @@ public class TaskControllerTest {
 
     @Test
     void whenRequestTaskListDonePageThenGetPageWithDoneTasks() {
-        var task1 = new Task(1, "test1", Timestamp.valueOf(String.format("%04d-%02d-%02d 01:00:00",
-                2023, 4, 02)), true);
-        var task2 = new Task(2, "test2", Timestamp.valueOf(String.format("%04d-%02d-%02d 02:00:00",
-                2023, 4, 02)), false);
+        var task1 = new Task(1, "test1", now(), true);
+        var task2 = new Task(2, "test2", now(), false);
         List<Task> expectedDoneTasks = List.of(task1);
         when(taskService.findByDone(true)).thenReturn(expectedDoneTasks);
 
@@ -149,10 +141,8 @@ public class TaskControllerTest {
     @Test
     void whenRequestNewTaskListPageThenGetPageWithInfo() {
         var expectedMessage = "Выполненных задач не найдено";
-        var task1 = new Task(1, "test1", Timestamp.valueOf(String.format("%04d-%02d-%02d 01:00:00",
-                2023, 4, 02)), true);
-        var task2 = new Task(2, "test2", Timestamp.valueOf(String.format("%04d-%02d-%02d 02:00:00",
-                2023, 4, 02)), true);
+        var task1 = new Task(1, "test1", now(), true);
+        var task2 = new Task(2, "test2", now(), true);
         List<Task> expectedNewTasks = Collections.emptyList();
         when(taskService.findByDone(false)).thenReturn(expectedNewTasks);
 

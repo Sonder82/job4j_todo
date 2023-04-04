@@ -52,18 +52,34 @@ public class HbmTaskRepository implements TaskRepository, AutoCloseable {
 
     @Override
     public boolean update(Task task) {
-        boolean result = false;
+        Session session = sf.openSession();
+        Transaction tr = null;
+        try {
+            tr = session.beginTransaction();
+            session.update(task);
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            if (tr != null) {
+                tr.rollback();
+            }
+            throw e;
+        } finally {
+            session.close();
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateFieldDone(Integer id) {
+        var result = false;
         Session session = sf.openSession();
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
             var query = session.createQuery(
-                    "UPDATE Task SET description = :fDescription, created = :fCreated, done = :fDone WHERE id = :fId");
-
-            query.setParameter("fDescription", task.getDescription());
-            query.setParameter("fCreated", task.getCreated());
-            query.setParameter("fDone", task.isDone());
-            query.setParameter("fId", task.getId());
+                    "UPDATE Task SET done = :fDone WHERE id = :fId");
+            query.setParameter("fId", id);
+            query.setParameter("fDone", true);
             result = query.executeUpdate() > 0;
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -76,7 +92,6 @@ public class HbmTaskRepository implements TaskRepository, AutoCloseable {
         }
         return result;
     }
-
     @Override
     public boolean deleteById(Integer id) {
         boolean result = false;

@@ -19,4 +19,6 @@ public interface TaskRepository {
     Collection<Task> findByDone(boolean key);
 
     Optional<Task> findById(Integer id);
+
+    boolean updateFieldDone(Integer id);
 }
