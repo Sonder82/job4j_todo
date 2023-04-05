@@ -17,9 +17,9 @@
             <a class="navbar-brand" href="/">Job4j TODO</a>
             <div class="collapse navbar-collapse">
                 <div class="navbar-nav me-auto">
-                    <a class="nav-item nav-link" href="/">Главная</a>
+                    <a class="nav-item nav-link active" href="/">Главная</a>
                     <a class="nav-item nav-link" th:href="@{/tasks}">Все задачи</a>
-                    <a class="nav-item nav-link active" th:href="@{/tasks}">Выполненные задачи</a>
+                    <a class="nav-item nav-link" th:href="@{/tasks}">Выполненные задачи</a>
                     <a class="nav-item nav-link" th:href="@{/tasks}">Новые задачи</a>
                 </div>
                 <div class="d-flex" th:if="${user.name == 'Гость'}">

@@ -23,6 +23,7 @@ public class HbmUserRepository implements UserRepository {
             session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
+            rsl = Optional.ofNullable(user);
         } catch (Exception e) {
            session.getTransaction().rollback();
         } finally {
@@ -33,8 +34,8 @@ public class HbmUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByLoginAndPassword(String login, String password) {
-        Session session = sf.openSession();
         Optional<User> user = Optional.empty();
+        Session session = sf.openSession();
         Transaction tr = null;
         try {
             tr = session.beginTransaction();
