@@ -23,7 +23,7 @@ public class HbmUserRepository implements UserRepository {
             session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
-            rsl = Optional.ofNullable(user);
+            rsl = Optional.of(user);
         } catch (Exception e) {
            session.getTransaction().rollback();
         } finally {
