@@ -12,13 +12,13 @@ public interface TaskRepository {
 
     boolean update(Task task);
 
-    boolean deleteById(Integer id);
+    boolean deleteById(int id);
 
     Collection<Task> findAll();
 
     Collection<Task> findByDone(boolean key);
 
-    Optional<Task> findById(Integer id);
+    Optional<Task> findById(int id);
 
-    boolean updateFieldDone(Integer id);
+    boolean updateFieldDone(int id);
 }
