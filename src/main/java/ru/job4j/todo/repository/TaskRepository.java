@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface TaskRepository {
 
-    Task add(Task task);
+    Optional<Task> add(Task task);
 
     boolean update(Task task);
 

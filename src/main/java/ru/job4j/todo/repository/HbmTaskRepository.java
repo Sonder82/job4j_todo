@@ -3,6 +3,8 @@ package ru.job4j.todo.repository;
 import lombok.AllArgsConstructor;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.Task;
 
@@ -19,48 +21,62 @@ public class HbmTaskRepository implements TaskRepository, AutoCloseable {
     private final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
             .configure().build();
 
+    private static final Logger LOG = LoggerFactory.getLogger(HbmTaskRepository.class.getName());
+
     private final CrudRepository crudRepository;
 
     @Override
-    public Task add(Task task) {
-        crudRepository.run(session -> session.persist(task));
-        return task;
+    public Optional<Task> add(Task task) {
+        Optional<Task> rsl = Optional.empty();
+        try {
+            crudRepository.run(session -> session.persist(task));
+            rsl = Optional.of(task);
+        } catch (Exception e) {
+            LOG.error("Error message: " + e.getMessage(), e);
+        }
+        return rsl;
     }
 
     @Override
     public boolean update(Task task) {
+        boolean rsl = false;
         try {
             crudRepository.run(session -> session.merge(task));
-            return true;
+            rsl = true;
         } catch (Exception e) {
-            return false;
+            LOG.error("Error message: " + e.getMessage(), e);
         }
+        return rsl;
     }
 
     @Override
     public boolean updateFieldDone(int id) {
+        boolean rsl = false;
         try {
             crudRepository.run(
                     "UPDATE Task SET done = :fDone WHERE id = :fId",
                     Map.of("fId", id)
             );
-            return true;
+            rsl = true;
         } catch (Exception e) {
-            return false;
+            LOG.error("Error message: " + e.getMessage(), e);
         }
+        return rsl;
     }
 
     @Override
     public boolean deleteById(int id) {
+        boolean rsl = false;
         try {
             crudRepository.run(
                     "DELETE Task WHERE id = :fId",
                     Map.of("fId", id)
             );
-            return true;
+            rsl = true;
         } catch (Exception e) {
-            return false;
+            LOG.error("Error message: " + e.getMessage(), e);
         }
+        return rsl;
     }
 
     @Override

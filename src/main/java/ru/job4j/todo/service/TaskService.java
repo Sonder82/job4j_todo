@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface TaskService {
 
-    Task add(Task task);
+    Optional<Task> add(Task task);
 
     boolean update(Task task);
 
