@@ -33,5 +33,11 @@ public class Task {
     @Setter
     private boolean done;
 
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "todo_user_id")
+    private User user;
+
 }
 

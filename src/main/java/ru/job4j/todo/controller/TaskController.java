@@ -5,8 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Controller
@@ -23,14 +25,16 @@ public class TaskController {
     }
 
     @GetMapping("/create")
-    public String getCreationPage() {
+    public String getCreationPage(Model model) {
         return "tasks/create";
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Task task, Model model) {
-            taskService.add(task);
-            return "redirect:/tasks";
+    public String create(@ModelAttribute Task task, HttpSession session) {
+        var user = (User) session.getAttribute("user");
+        task.setUser(user);
+        taskService.add(task);
+        return "redirect:/tasks";
     }
 
     @GetMapping("/{id}")
@@ -67,12 +71,12 @@ public class TaskController {
 
     @PostMapping("/update")
     public String update(@ModelAttribute Task task, Model model) {
-            boolean isUpdated = taskService.update(task);
-            if (!isUpdated) {
-                model.addAttribute("message", "Задача с указанным идентификатором не найдена");
-                return "errors/404";
-            }
-            return "redirect:/tasks";
+        boolean isUpdated = taskService.update(task);
+        if (!isUpdated) {
+            model.addAttribute("message", "Задача с указанным идентификатором не найдена");
+            return "errors/404";
+        }
+        return "redirect:/tasks";
     }
 
 

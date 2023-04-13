@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ui.ConcurrentModel;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
 import java.util.Collections;
@@ -30,8 +31,8 @@ public class TaskControllerTest {
 
     @Test
     void whenRequestTaskListPageThenGetPageWithTasks() {
-        var task1 = new Task(1, "test1", now(), false);
-        var task2 = new Task(2, "test2", now(), false);
+        var task1 = new Task(1, "test1", now(), false, new User());
+        var task2 = new Task(2, "test2", now(), false, new User());
         List<Task> expectedTasks = List.of(task1, task2);
         when(taskService.findAll()).thenReturn(expectedTasks);
 
@@ -46,7 +47,7 @@ public class TaskControllerTest {
     @Test
     public void whenRequestIdThenGetPageWithTasks() {
         int searchId = 1;
-        var task1 = new Task(1, "test1", now(), false);
+        var task1 = new Task(1, "test1", now(), false, new User());
         when(taskService.findById(searchId)).thenReturn(Optional.of(task1));
 
         var model = new ConcurrentModel();
@@ -73,7 +74,7 @@ public class TaskControllerTest {
 
     @Test
     public void whenPostTaskThenUpdateAndRedirectToTaskPage() throws Exception {
-        var taskUpdate = new Task(1, "test1", now(), false);
+        var taskUpdate = new Task(1, "test1", now(), false, new User());
 
         ArgumentCaptor<Task> taskArgumentCaptor = ArgumentCaptor.forClass(Task.class);
         when(taskService.update(taskArgumentCaptor.capture())).thenReturn(true);
@@ -89,7 +90,7 @@ public class TaskControllerTest {
     @Test
     public void whenPostTaskThenTryUpdateAndRedirectToErrorPage() {
         var expectedMessage = "Задача с указанным идентификатором не найдена";
-        var taskUpdate = new Task(1, "test1", now(), false);
+        var taskUpdate = new Task(1, "test1", now(), false, new User());
         when(taskService.update(any(Task.class))).thenReturn(false);
 
         var model = new ConcurrentModel();
@@ -125,8 +126,8 @@ public class TaskControllerTest {
 
     @Test
     void whenRequestTaskListDonePageThenGetPageWithDoneTasks() {
-        var task1 = new Task(1, "test1", now(), true);
-        var task2 = new Task(2, "test2", now(), false);
+        var task1 = new Task(1, "test1", now(), true, new User());
+        var task2 = new Task(2, "test2", now(), false, new User());
         List<Task> expectedDoneTasks = List.of(task1);
         when(taskService.findByDone(true)).thenReturn(expectedDoneTasks);
 
@@ -141,8 +142,8 @@ public class TaskControllerTest {
     @Test
     void whenRequestNewTaskListPageThenGetPageWithInfo() {
         var expectedMessage = "Выполненных задач не найдено";
-        var task1 = new Task(1, "test1", now(), true);
-        var task2 = new Task(2, "test2", now(), true);
+        var task1 = new Task(1, "test1", now(), true, new User());
+        var task2 = new Task(2, "test2", now(), true, new User());
         List<Task> expectedNewTasks = Collections.emptyList();
         when(taskService.findByDone(false)).thenReturn(expectedNewTasks);
 
