@@ -3,7 +3,6 @@ package ru.job4j.todo.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,5 +38,10 @@ public class Task {
     @JoinColumn(name = "todo_user_id")
     private User user;
 
+    @Getter
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "priority_id")
+    private Priority priority;
 }
 

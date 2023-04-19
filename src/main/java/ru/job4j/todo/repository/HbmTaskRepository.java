@@ -54,8 +54,8 @@ public class HbmTaskRepository implements TaskRepository, AutoCloseable {
         boolean rsl = false;
         try {
             crudRepository.run(
-                    "UPDATE Task SET done = :fDone WHERE id = :fId",
-                    Map.of("fId", id)
+                    "Update Task SET done = :fDone  WHERE id = :fId",
+                    Map.of("fId", id, "fDone", true)
             );
             rsl = true;
         } catch (Exception e) {
@@ -82,14 +82,14 @@ public class HbmTaskRepository implements TaskRepository, AutoCloseable {
     @Override
     public Collection<Task> findAll() {
         return crudRepository.query(
-                "FROM Task ORDER BY id", Task.class
+                "FROM Task f JOIN FETCH f.priority", Task.class
         );
     }
 
     @Override
     public Collection<Task> findByDone(boolean key) {
         return crudRepository.query(
-                "FROM Task WHERE done = :fDone", Task.class,
+                "FROM Task f JOIN FETCH f.priority WHERE f.done = :fDone", Task.class,
                 Map.of("fDone", key)
         );
     }
@@ -97,7 +97,7 @@ public class HbmTaskRepository implements TaskRepository, AutoCloseable {
     @Override
     public Optional<Task> findById(int id) {
         return crudRepository.optional(
-                "FROM Task WHERE id = :fId", Task.class,
+                "FROM Task f JOIN FETCH f.priority WHERE f.id = :fId", Task.class,
                 Map.of("fId", id)
         );
     }

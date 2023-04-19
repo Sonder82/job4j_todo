@@ -45,6 +45,11 @@
             <div class="mb-3">
                 <label for="description" class="form-label"><b>Описание</b></label>
                 <p class="form-control" id="description" rows="25" th:text="${task.description}"></p>
+                <label for="created" class="form-label"><b>Дата создания</b></label>
+                <p class="form-control" id="created" rows="25"
+                   th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"></p>
+                <label for="priority" class="form-label"><b>Приоритет</b></label>
+                <p class="form-control" id="priority" rows="25" th:text="${task.priority.name}"></p>
             </div>
             <div class="mb-3 row">
                 <div class="row">

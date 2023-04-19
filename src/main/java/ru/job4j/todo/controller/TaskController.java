@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
@@ -15,7 +16,10 @@ import java.util.Optional;
 @RequestMapping("/tasks")
 @AllArgsConstructor
 public class TaskController {
+
     private final TaskService taskService;
+
+    private final PriorityService priorityService;
 
 
     @GetMapping
@@ -26,6 +30,7 @@ public class TaskController {
 
     @GetMapping("/create")
     public String getCreationPage(Model model) {
+        model.addAttribute("priorities", priorityService.findAll());
         return "tasks/create";
     }
 
@@ -44,6 +49,7 @@ public class TaskController {
             model.addAttribute("message", "Задача с указанным идентификатором не найдена");
             return "errors/404";
         }
+        model.addAttribute("priorities", priorityService.findAll());
         model.addAttribute("task", taskOptional.get());
         return "tasks/info";
     }
@@ -65,6 +71,7 @@ public class TaskController {
             model.addAttribute("message", "Задача с указанным идентификатором не найдена");
             return "errors/404";
         }
+        model.addAttribute("priorities", priorityService.findAll());
         model.addAttribute("task", taskOptional.get());
         return "tasks/edit";
     }

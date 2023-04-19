@@ -58,6 +58,7 @@
                     <th scope="col">Дата создания</th>
                     <th scope="col">Статус выполнения</th>
                     <th scope="col">Ответственный за задание</th>
+                    <th scope="col">Приоритет задания</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -67,6 +68,7 @@
                     <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"/>
                     <td th:text="${task.done} ? 'выполнено' : 'в работе'"/>
                     <td th:text="${task.user.name}" />
+                    <td th:text="${task.priority.name}" />
                 </tr>
                 </tbody>
             </table>
