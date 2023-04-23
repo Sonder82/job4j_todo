@@ -55,6 +55,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Имя</th>
+                    <th scope="col">Категория</th>
                     <th scope="col">Дата создания</th>
                     <th scope="col">Статус выполнения</th>
                     <th scope="col">Ответственный за задание</th>
@@ -65,6 +66,11 @@
                 <tr th:each="task: ${tasks}">
                     <td th:text="${task.id}" />
                     <td><a th:text="${task.description}" th:href="@{/tasks/{taskId}(taskId=${task.id})}"></a></td>
+                    <td>
+                        <span th:each="category: ${task.categories}" >
+                            <p th:text="${category.name}"></p>
+                        </span>
+                    </td>
                     <td th:text="${#temporals.format(task.created, 'dd-MM-yyyy HH:mm')}"/>
                     <td th:text="${task.done} ? 'выполнено' : 'в работе'"/>
                     <td th:text="${task.user.name}" />

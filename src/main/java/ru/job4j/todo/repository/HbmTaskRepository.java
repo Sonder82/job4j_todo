@@ -82,14 +82,14 @@ public class HbmTaskRepository implements TaskRepository, AutoCloseable {
     @Override
     public Collection<Task> findAll() {
         return crudRepository.query(
-                "FROM Task f JOIN FETCH f.priority", Task.class
+                "SELECT DISTINCT f FROM Task f JOIN FETCH f.priority JOIN FETCH f.categories", Task.class
         );
     }
 
     @Override
     public Collection<Task> findByDone(boolean key) {
         return crudRepository.query(
-                "FROM Task f JOIN FETCH f.priority WHERE f.done = :fDone", Task.class,
+                "FROM Task f JOIN FETCH f.priority JOIN FETCH f.categories WHERE f.done = :fDone", Task.class,
                 Map.of("fDone", key)
         );
     }
@@ -97,7 +97,7 @@ public class HbmTaskRepository implements TaskRepository, AutoCloseable {
     @Override
     public Optional<Task> findById(int id) {
         return crudRepository.optional(
-                "FROM Task f JOIN FETCH f.priority WHERE f.id = :fId", Task.class,
+                "FROM Task f JOIN FETCH f.priority JOIN FETCH f.categories WHERE f.id = :fId", Task.class,
                 Map.of("fId", id)
         );
     }

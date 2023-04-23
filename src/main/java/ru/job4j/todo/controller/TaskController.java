@@ -6,10 +6,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -21,23 +23,30 @@ public class TaskController {
 
     private final PriorityService priorityService;
 
+    private final CategoryService categoryService;
+
 
     @GetMapping
     public String getAll(Model model) {
         model.addAttribute("tasks", taskService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/list";
     }
 
     @GetMapping("/create")
     public String getCreationPage(Model model) {
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         return "tasks/create";
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Task task, HttpSession session) {
+    public String create(@ModelAttribute Task task,
+                         @RequestParam("category.id") List<Integer> categoryListId, HttpSession session) {
         var user = (User) session.getAttribute("user");
         task.setUser(user);
+        var categoriesID = categoryService.findByIdList(categoryListId);
+        task.setCategories(categoriesID);
         taskService.add(task);
         return "redirect:/tasks";
     }
@@ -72,12 +81,18 @@ public class TaskController {
             return "errors/404";
         }
         model.addAttribute("priorities", priorityService.findAll());
+        model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("task", taskOptional.get());
         return "tasks/edit";
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Task task, Model model) {
+    public String update(@ModelAttribute Task task, @RequestParam("category.id") List<Integer> categoryListId,
+                         Model model, HttpSession httpSession) {
+        var user = (User) httpSession.getAttribute("user");
+        task.setUser(user);
+        var categoriesID = categoryService.findByIdList(categoryListId);
+        task.setCategories(categoriesID);
         boolean isUpdated = taskService.update(task);
         if (!isUpdated) {
             model.addAttribute("message", "Задача с указанным идентификатором не найдена");
