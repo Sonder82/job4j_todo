@@ -41,11 +41,19 @@
             </div>
             <div class="mb-3">
                 <label for="login" class="form-label"><b>Логин</b></label>
-                <input type="login" class="form-control" id="login" name="login" placeholder="ivan@mail.ru" required>
+                <input type="login" class="form-control" id="login" name="login" placeholder="login" required>
             </div>
             <div class="mb-3">
                 <label for="password" class="form-label"><b>Пароль</b></label>
                 <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3" >
+                <label for="userzone"><b>Часовой пояс</b></label>
+                <select class="form-control" id="userzone" name="userzone" multiple="multiple">
+                    <option th:each="zone : ${listZone}"
+                            th:value="${zone.getID()}"
+                            th:text="${zone.getID() + ' : ' + zone.getDisplayName()}"></option>
+                </select>
             </div>
             <div class="mb-3 row">
                 <div class="col-6"></div>

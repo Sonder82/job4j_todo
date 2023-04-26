@@ -1,0 +1,1 @@
+ALTER TABLE todo_users ADD COLUMN userzone varchar;

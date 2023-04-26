@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -48,4 +50,5 @@ public class SimpleTaskService implements TaskService {
     public Optional<Task> findById(Integer id) {
         return taskRepository.findById(id);
     }
+
 }

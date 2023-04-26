@@ -6,8 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
 
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Repository
 @AllArgsConstructor
@@ -35,5 +34,14 @@ public class HbmUserRepository implements UserRepository {
                 "FROM User WHERE login = :fLogin AND password = :fPassword", User.class,
                 Map.of("fLogin", login, "fPassword", password)
         );
+    }
+
+    @Override
+    public List<TimeZone> listZone() {
+        List<TimeZone> zones = new ArrayList<TimeZone>();
+        for (String timeId : TimeZone.getAvailableIDs()) {
+            zones.add(TimeZone.getTimeZone(timeId));
+        }
+        return zones;
     }
 }

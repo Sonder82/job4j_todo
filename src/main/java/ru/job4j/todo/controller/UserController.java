@@ -33,7 +33,8 @@ public class UserController {
      * @return возвращает страницу с регистрацией
      */
     @GetMapping("/register")
-    public String getRegistrationPage() {
+    public String getRegistrationPage(Model model) {
+        model.addAttribute("listZone", userService.listZone());
         return "users/register";
     }
 

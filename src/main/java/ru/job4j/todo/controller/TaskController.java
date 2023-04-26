@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.todo.UserTimeZone;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.CategoryService;
@@ -27,11 +28,15 @@ public class TaskController {
 
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("tasks", taskService.findAll());
+    public String getAll(Model model, HttpSession session) {
+        var taskList = taskService.findAll();
+        taskList.forEach(task -> UserTimeZone.setUserTimeZone(session, task));
+        model.addAttribute("tasks", taskList);
         model.addAttribute("categories", categoryService.findAll());
         return "tasks/list";
     }
+
+
 
     @GetMapping("/create")
     public String getCreationPage(Model model) {
