@@ -61,7 +61,7 @@ public class TaskControllerTest {
         when(taskService.findAll()).thenReturn(expectedTasks);
 
         var model = new ConcurrentModel();
-        String view = taskController.getAll(model, user);
+        String view = taskController.getAll(model, httpSession);
         var actualTasks = model.getAttribute("tasks");
 
         assertThat(view).isEqualTo("tasks/list");

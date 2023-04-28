@@ -28,7 +28,8 @@ public class TaskController {
 
 
     @GetMapping
-    public String getAll(Model model, @SessionAttribute User user) {
+    public String getAll(Model model, HttpSession session) {
+        var user = (User) session.getAttribute("user");
         var taskList = taskService.findAll();
         taskList.forEach(task -> UserTimeZone.setUserTimeZone(task, user));
         model.addAttribute("tasks", taskList);
