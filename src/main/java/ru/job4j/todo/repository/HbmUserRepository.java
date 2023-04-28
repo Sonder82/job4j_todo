@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
 
+import java.time.ZoneId;
 import java.util.*;
 
 @Repository
@@ -38,8 +39,8 @@ public class HbmUserRepository implements UserRepository {
 
     @Override
     public List<TimeZone> listZone() {
-        List<TimeZone> zones = new ArrayList<TimeZone>();
-        for (String timeId : TimeZone.getAvailableIDs()) {
+        List<TimeZone> zones = new ArrayList<>();
+        for (String timeId : ZoneId.getAvailableZoneIds()) {
             zones.add(TimeZone.getTimeZone(timeId));
         }
         return zones;

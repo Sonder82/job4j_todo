@@ -53,29 +53,29 @@ public class TaskControllerTest {
         user = new User(1, "user", "user", "123", "UTC");
     }
 
-//    @Test
-//    void whenRequestTaskListPageThenGetPageWithTasks() {
-//        var task1 = new Task(1, "test1", now(), false, user, new Priority(), List.of());
-//        var task2 = new Task(2, "test2", now(), false, user, new Priority(), List.of());
-//        List<Task> expectedTasks = List.of(task1, task2);
-//        when(taskService.findAll()).thenReturn(expectedTasks);
-//
-//        var model = new ConcurrentModel();
-//        String view = taskController.getAll(model, httpSession);
-//        var actualTasks = model.getAttribute("tasks");
-//
-//        assertThat(view).isEqualTo("tasks/list");
-//        assertThat(actualTasks).isEqualTo(expectedTasks);
-//    }
+    @Test
+    void whenRequestTaskListPageThenGetPageWithTasks() {
+        var task1 = new Task(1, "test1", now(), false, user, new Priority(), List.of());
+        var task2 = new Task(2, "test2", now(), false, user, new Priority(), List.of());
+        List<Task> expectedTasks = List.of(task1, task2);
+        when(taskService.findAll()).thenReturn(expectedTasks);
+
+        var model = new ConcurrentModel();
+        String view = taskController.getAll(model, user);
+        var actualTasks = model.getAttribute("tasks");
+
+        assertThat(view).isEqualTo("tasks/list");
+        assertThat(actualTasks).isEqualTo(expectedTasks);
+    }
 
     @Test
     public void whenRequestIdThenGetPageWithTasks() {
         int searchId = 1;
-        var task1 = new Task(1, "test1", now(), false, new User(), new Priority(), List.of());
+        var task1 = new Task(1, "test1", now(), false, user, new Priority(), List.of());
         when(taskService.findById(searchId)).thenReturn(Optional.of(task1));
 
         var model = new ConcurrentModel();
-        String view = taskController.getById(model, searchId);
+        String view = taskController.getById(model, searchId, user);
         var actualTask = model.getAttribute("task");
 
         assertThat(view).isEqualTo("tasks/info");
@@ -89,7 +89,7 @@ public class TaskControllerTest {
         when(taskService.findById(notExistID)).thenReturn(Optional.empty());
 
         var model = new ConcurrentModel();
-        String view = taskController.getById(model, notExistID);
+        String view = taskController.getById(model, notExistID, user);
         var actualMessage = model.getAttribute("message");
 
         assertThat(view).isEqualTo("errors/404");
@@ -150,13 +150,13 @@ public class TaskControllerTest {
 
     @Test
     void whenRequestTaskListDonePageThenGetPageWithDoneTasks() {
-        var task1 = new Task(1, "test1", now(), true, new User(), new Priority(), List.of());
-        var task2 = new Task(2, "test2", now(), false, new User(), new Priority(), List.of());
+        var task1 = new Task(1, "test1", now(), true, user, new Priority(), List.of());
+        var task2 = new Task(2, "test2", now(), false, user, new Priority(), List.of());
         List<Task> expectedDoneTasks = List.of(task1);
         when(taskService.findByDone(true)).thenReturn(expectedDoneTasks);
 
         var model = new ConcurrentModel();
-        String view = taskController.doneTask(model);
+        String view = taskController.doneTask(model, user);
         var actualTasks = model.getAttribute("tasks");
 
         assertThat(view).isEqualTo("tasks/list");
@@ -166,13 +166,13 @@ public class TaskControllerTest {
     @Test
     void whenRequestNewTaskListPageThenGetPageWithInfo() {
         var expectedMessage = "Выполненных задач не найдено";
-        var task1 = new Task(1, "test1", now(), true, new User(), new Priority(), List.of());
-        var task2 = new Task(2, "test2", now(), true, new User(), new Priority(), List.of());
+        var task1 = new Task(1, "test1", now(), true, user, new Priority(), List.of());
+        var task2 = new Task(2, "test2", now(), true, user, new Priority(), List.of());
         List<Task> expectedNewTasks = Collections.emptyList();
         when(taskService.findByDone(false)).thenReturn(expectedNewTasks);
 
         var model = new ConcurrentModel();
-        String view = taskController.doneTask(model);
+        String view = taskController.doneTask(model, user);
         var actualMessage = model.getAttribute("message");
 
         assertThat(view).isEqualTo("info/info");

@@ -7,10 +7,12 @@ import javax.servlet.http.HttpSession;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
-public class UserTimeZone {
+public final class UserTimeZone {
 
-    public static void setUserTimeZone(HttpSession session, Task task) {
-        var user = (User) session.getAttribute("user");
+    private UserTimeZone() {
+    }
+
+    public static void setUserTimeZone(Task task, User user) {
         if (user.getUserzone() == null) {
             user.setUserzone(TimeZone.getDefault().getID());
         }

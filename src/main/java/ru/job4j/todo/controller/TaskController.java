@@ -28,9 +28,9 @@ public class TaskController {
 
 
     @GetMapping
-    public String getAll(Model model, HttpSession session) {
+    public String getAll(Model model, @SessionAttribute User user) {
         var taskList = taskService.findAll();
-        taskList.forEach(task -> UserTimeZone.setUserTimeZone(session, task));
+        taskList.forEach(task -> UserTimeZone.setUserTimeZone(task, user));
         model.addAttribute("tasks", taskList);
         model.addAttribute("categories", categoryService.findAll());
         return "tasks/list";
@@ -57,12 +57,13 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id) {
+    public String getById(Model model, @PathVariable int id, @SessionAttribute User user) {
         Optional<Task> taskOptional = taskService.findById(id);
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Задача с указанным идентификатором не найдена");
             return "errors/404";
         }
+        UserTimeZone.setUserTimeZone(taskOptional.get(), user);
         model.addAttribute("priorities", priorityService.findAll());
         model.addAttribute("task", taskOptional.get());
         return "tasks/info";
@@ -118,23 +119,25 @@ public class TaskController {
     }
 
     @GetMapping("/done")
-    public String doneTask(Model model) {
+    public String doneTask(Model model, @SessionAttribute User user) {
         var taskCollection = taskService.findByDone(true);
         if (taskCollection.isEmpty()) {
             model.addAttribute("message", "Выполненных задач не найдено");
             return "info/info";
         }
+        taskCollection.forEach(task -> UserTimeZone.setUserTimeZone(task, user));
         model.addAttribute("tasks", taskCollection);
         return "tasks/list";
     }
 
     @GetMapping("/new")
-    public String newTask(Model model) {
+    public String newTask(Model model, @SessionAttribute User user) {
         var taskCollection = taskService.findByDone(false);
         if (taskCollection.isEmpty()) {
             model.addAttribute("message", "Новых задач не найдено");
             return "info/info";
         }
+        taskCollection.forEach(task -> UserTimeZone.setUserTimeZone(task, user));
         model.addAttribute("tasks", taskCollection);
         return "tasks/list";
     }
