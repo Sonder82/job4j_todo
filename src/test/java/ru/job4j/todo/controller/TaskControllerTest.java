@@ -3,6 +3,7 @@ package ru.job4j.todo.controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.springframework.ui.ConcurrentModel;
 import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
@@ -59,6 +60,8 @@ public class TaskControllerTest {
         var task2 = new Task(2, "test2", now(), false, user, new Priority(), List.of());
         List<Task> expectedTasks = List.of(task1, task2);
         when(taskService.findAll()).thenReturn(expectedTasks);
+        when(httpSession.getAttribute(any(String.class))).thenReturn(user);
+
 
         var model = new ConcurrentModel();
         String view = taskController.getAll(model, httpSession);
